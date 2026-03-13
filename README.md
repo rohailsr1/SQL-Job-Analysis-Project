@@ -1,62 +1,235 @@
-# Data Job Market Analysis: SQL Project 📊
+# 📊 SQL Data Job Analysis Project
 
-## 📌 Introduction
-What are the most in-demand and highest-paying skills for Data Analysts? This project dives into a dataset of thousands of job postings from **2023** to uncover the real trends driving the data industry. By querying a database of real-world job postings, I identified the technical competencies that offer the best return on investment for aspiring data professionals.
-
----
-
-## 🛠️ Tools I Used
-- **SQL:** The primary tool for data extraction and analysis.
-- **PostgreSQL:** My chosen RDBMS for managing the large dataset.
-- **pgAdmin 4:** The interface used for database management and query execution.
-- **VS Code:** My environment for writing SQL scripts and managing this repository.
-
-## 🔍 The Analysis
-I developed targeted SQL queries to answer five critical industry questions:
-
-1. **Top-Paying Data Analyst Jobs:** Who is paying the most for data talent?
-2. **Skills for Top-Paying Jobs:** What do the $100k+ roles require?
-3. **Most In-Demand Skills:** Which tools appear most frequently in job descriptions?
-4. **Top Skills based on Salary:** Which specific libraries and tools command a premium?
-5. **Optimal Skills to Learn:** Where do high demand and high salary intersect?
+[![GitHub](https://img.shields.io/badge/GitHub-Project-blue)](https://github.com/rohailsr1/SQL-Job-Analysis-Project)
+[![SQL](https://img.shields.io/badge/SQL-Queries-green)](#)
+[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-DB-blueviolet)](#)
+[![VS Code](https://img.shields.io/badge/VSCode-IDE-yellowgreen)](#)
 
 ---
 
-## 📈 Key Findings & Figures
-My analysis yielded specific, data-backed insights into the market:
+## Introduction
 
-### 1. The Skill Demand Hierarchy
-The most mentioned skills across all job postings show a clear reliance on a core "Big Three":
-- **SQL:** 7,291 mentions (The undisputed king of data retrieval).
-- **Excel:** 4,611 mentions (Still fundamental for business analysis).
-- **Python:** 4,330 mentions (Essential for automation and advanced analysis).
+This project explores the **data analyst job market using SQL** by analyzing job postings that contain information about salaries, job titles, companies, and required skills.
 
-### 2. High-Salary Specializations
-The highest average salaries are not found in general tools, but in **Big Data** and **Cloud** technologies:
-- **PySpark:** $208,172 average salary (Top-paying skill).
-- **Bitbucket/GitLab:** $154k–$189k (Reflecting the high value of version control).
-- **Pandas/NumPy:** $143k–$151k (Highlighting the premium on Python's data manipulation libraries).
+Objectives:
 
-### 3. The "Optimal" Skills (High Demand + High Pay)
-To identify the best skills to learn right now, I looked for the intersection of frequency and compensation:
-- **Go / Hadoop:** Average salaries over $113k.
-- **Snowflake / Azure:** High-demand cloud platforms with salaries averaging $111k–$112k.
-- **AWS:** A major market player with an average salary of $108k.
+- 💰 Identify the **highest-paying data analyst jobs**  
+- 🔥 Find **most in-demand skills** in the job market  
+- 📈 Determine skills associated with **higher salaries**  
+- 🎯 Recommend **optimal skills to learn** for aspiring data analysts  
+
+SQL was used to extract insights from the dataset and answer key questions about **salary, demand, and technical skills**.
 
 ---
 
-## 💡 What I Learned
-Through this project, I mastered several advanced SQL techniques:
-* **Complex Joins:** Connecting job postings to specialized skill tables to see the "hidden" requirements of high-paying roles.
-* **CTEs & Subqueries:** Breaking down multi-step analysis (like finding average salaries for only the most frequent skills) into readable, modular code.
-* **Data Standardizing:** Using `CASE` statements and `\copy` commands to handle messy, real-world CSV data.
-* **Strategic Thinking:** Learning to use data to guide my own learning roadmap—prioritizing Cloud and Big Data tools for future growth.
+## Project Architecture
 
-## 🏁 Conclusions
-The data is clear: **SQL remains the foundation**, but high-end compensation is driven by **Cloud proficiency (AWS/Snowflake)** and **Big Data processing (PySpark)**. For an analyst to maximize their value, they should focus on a "T-shaped" skill set: deep expertise in SQL/Python, supported by a broad understanding of cloud environments and version control (Git).
+The project follows a **dimensional modeling approach** with two types of tables:
+
+### Fact Table:
+
+- `job_postings_fact` — Contains job posting information including job ID, title, location, salary, and company ID.
+
+### Dimension Tables:
+
+- `company_dim` — Stores company information  
+- `skills_dim` — Stores all possible skills  
+- `skills_job_dim` — Links jobs to skills  
+
+**Query flow example:**
+
+1. Start from `job_postings_fact`  
+2. Join with `skills_job_dim` → `skills_dim` for skill info  
+3. Join with `company_dim` for company details  
+4. Aggregate, filter, and rank results using SQL queries
 
 ---
 
-### 📬 Contact
-- **Name:** Muhammad Rohail
-- **Email:** rohailsr1@gmail.com
+## Database Schema (ERD)
+
+![ERD Diagram](./images/ERD_SQL_Job_Analysis.png)  
+*ERD showing relationships between fact and dimension tables.*
+
+---
+
+## Tools Used
+
+- **SQL** – Querying and analysis  
+- **PostgreSQL** – Database management  
+- **Visual Studio Code** – Query writing & testing  
+- **Git & GitHub** – Version control and sharing  
+
+**SQL Concepts Applied:**
+
+- `JOIN`, `LEFT JOIN`  
+- `GROUP BY` & `COUNT/AVG`  
+- `CTE / WITH clause`  
+- Filtering & Sorting  
+- Aggregate Functions  
+
+---
+
+## Analysis & Findings
+
+### 1. Top-Paying Data Analyst Jobs
+
+```sql
+SELECT	
+    job_id, job_title, job_location, salary_year_avg, name AS company_name
+FROM job_postings_fact
+LEFT JOIN company_dim 
+    ON job_postings_fact.company_id = company_dim.company_id
+WHERE job_title_short = 'Data Analyst'
+AND salary_year_avg IS NOT NULL
+ORDER BY salary_year_avg DESC
+LIMIT 10;
+```
+
+**Findings:**
+
+- Top-paying salaries: **$180,000 – $600,000+ per year**  
+- High-paying positions often include **Senior Data Analyst, Director of Analytics, Lead Data Analyst**  
+- Commonly offered by **tech companies and financial firms**
+
+![Top Paying Jobs](./images/top_paying_jobs.png)
+
+---
+
+### 2. Skills Required for Top-Paying Jobs
+
+```sql
+WITH top_paying_jobs AS (
+SELECT job_id, job_title, salary_year_avg, name AS company_name
+FROM job_postings_fact
+LEFT JOIN company_dim ON job_postings_fact.company_id = company_dim.company_id
+WHERE job_title_short = 'Data Analyst'
+AND salary_year_avg IS NOT NULL
+ORDER BY salary_year_avg DESC
+LIMIT 10
+)
+SELECT top_paying_jobs.*, skills
+FROM top_paying_jobs
+INNER JOIN skills_job_dim ON top_paying_jobs.job_id = skills_job_dim.job_id
+INNER JOIN skills_dim ON skills_job_dim.skill_id = skills_dim.skill_id;
+```
+
+**Top Skills in High-Paying Roles:**
+
+| Skill | Importance |
+|-------|------------|
+| SQL | Core querying skill |
+| Python | Automation & advanced analysis |
+| Tableau | Data visualization |
+| Power BI | Business intelligence reporting |
+| Excel | Modeling & analysis |
+
+---
+
+### 3. Most In-Demand Skills
+
+```sql
+SELECT skills, COUNT(skills_job_dim.job_id) AS demand_count
+FROM job_postings_fact
+INNER JOIN skills_job_dim ON job_postings_fact.job_id = skills_job_dim.job_id
+INNER JOIN skills_dim ON skills_job_dim.skill_id = skills_dim.skill_id
+WHERE job_title_short = 'Data Analyst'
+GROUP BY skills
+ORDER BY demand_count DESC
+LIMIT 5;
+```
+
+**Top 5 Most In-Demand Skills:**
+
+1. SQL  
+2. Excel  
+3. Python  
+4. Tableau  
+5. Power BI  
+
+---
+
+### 4. Skills Associated with Higher Salaries
+
+```sql
+SELECT skills, ROUND(AVG(salary_year_avg),0) AS avg_salary
+FROM job_postings_fact
+INNER JOIN skills_job_dim ON job_postings_fact.job_id = skills_job_dim.job_id
+INNER JOIN skills_dim ON skills_job_dim.skill_id = skills_dim.skill_id
+WHERE salary_year_avg IS NOT NULL
+GROUP BY skills
+ORDER BY avg_salary DESC
+LIMIT 10;
+```
+
+**Key Findings:**
+
+- Skills with highest salaries include **Cloud platforms, Big Data tools, advanced programming**  
+- Average salaries for these skills: **$150,000+**  
+
+---
+
+### 5. Most Optimal Skills to Learn
+
+```sql
+SELECT skills_dim.skills, COUNT(skills_job_dim.job_id) AS demand_count,
+ROUND(AVG(job_postings_fact.salary_year_avg),0) AS avg_salary
+FROM job_postings_fact
+INNER JOIN skills_job_dim ON job_postings_fact.job_id = skills_job_dim.job_id
+INNER JOIN skills_dim ON skills_job_dim.skill_id = skills_dim.skill_id
+WHERE salary_year_avg IS NOT NULL
+GROUP BY skills_dim.skills
+ORDER BY avg_salary DESC, demand_count DESC;
+```
+
+**Optimal Skills:**
+
+- SQL  
+- Python  
+- Data Visualization (Tableau / Power BI)  
+- Cloud technologies  
+
+**Insight:** Combining **high-demand + high-paying skills** maximizes career potential.
+
+---
+
+## What I Learned
+
+- Writing **advanced SQL queries** for business insights  
+- Combining **fact and dimension tables** for analysis  
+- Using **aggregate functions** to rank skills and roles  
+- Extracting **actionable insights** from real-world datasets  
+- Understanding **job market trends for data analysts**
+
+---
+
+## Conclusions / Summary of Findings
+
+1. **SQL remains the most essential skill**, appearing in almost all job postings.  
+2. **High-paying roles** range from **$180k – $600k+**, typically at tech & finance companies.  
+3. **Python and programming skills** increase career opportunities and salaries.  
+4. **Visualization tools** (Tableau, Power BI) are critical for communication of insights.  
+5. **Cloud, Big Data, and advanced analytics skills** are associated with the highest salaries.  
+6. Combining **SQL + Python + Visualization** offers the most competitive advantage.  
+7. Organizations continue to **prioritize data-driven decision making**, increasing analyst demand.
+
+---
+
+## Folder Structure
+
+```
+SQL-Job-Analysis-Project/
+│
+├── images/                # ERD & screenshots
+├── project_sql/           # SQL queries used
+├── README.md              # Project documentation
+└── dataset/               # Original dataset (optional)
+```
+
+---
+
+## Author
+
+**Muhammad Rohail**  
+BS Entrepreneurship Student | Aspiring Data Analyst  
+
+Passionate about leveraging **data analytics, SQL, and BI tools** to solve business problems and uncover actionable insights.
