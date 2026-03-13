@@ -1,3 +1,6 @@
+/* Question : What are the most optimal skills to learn that are high demand and high paying?*/
+
+
 WITH skills_demand AS (
     SELECT
         skills_dim.skill_id,

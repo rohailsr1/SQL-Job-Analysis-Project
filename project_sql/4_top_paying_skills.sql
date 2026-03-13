@@ -1,3 +1,4 @@
+/* Question : What are the top skills based on salary?*/
 
 SELECT
     skills_dim.skills,
