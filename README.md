@@ -44,7 +44,6 @@ Completing this project significantly improved my technical workflow:
 - **Precision over Volume:** The market now rewards **precision**. Employers value analysts who can identify *why* data is missing and what that means for the bottom line.
 
 ---
-
 ### 📬 Contact
 If you have any questions about this project or want to connect:
 - **Name:** Muhammad Rohail
