@@ -45,13 +45,6 @@ The project follows a **dimensional modeling approach** with two types of tables
 
 ---
 
-## Database Schema (ERD)
-
-![ERD Diagram](./images/ERD_SQL_Job_Analysis.png)  
-*ERD showing relationships between fact and dimension tables.*
-
----
-
 ## Tools Used
 
 - **SQL** – Querying and analysis  
@@ -90,8 +83,6 @@ LIMIT 10;
 - Top-paying salaries: **$180,000 – $600,000+ per year**  
 - High-paying positions often include **Senior Data Analyst, Director of Analytics, Lead Data Analyst**  
 - Commonly offered by **tech companies and financial firms**
-
-![Top Paying Jobs](./images/top_paying_jobs.png)
 
 ---
 
@@ -211,19 +202,6 @@ ORDER BY avg_salary DESC, demand_count DESC;
 5. **Cloud, Big Data, and advanced analytics skills** are associated with the highest salaries.  
 6. Combining **SQL + Python + Visualization** offers the most competitive advantage.  
 7. Organizations continue to **prioritize data-driven decision making**, increasing analyst demand.
-
----
-
-## Folder Structure
-
-```
-SQL-Job-Analysis-Project/
-│
-├── images/                # ERD & screenshots
-├── project_sql/           # SQL queries used
-├── README.md              # Project documentation
-└── dataset/               # Original dataset (optional)
-```
 
 ---
 
