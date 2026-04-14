@@ -205,9 +205,12 @@ ORDER BY avg_salary DESC, demand_count DESC;
 
 ---
 
-## Author
+# 👤 Author
 
-**Muhammad Rohail**  
-BS Entrepreneurship Student | Aspiring Data Analyst  
+**Muhammad Rohail**
 
-Passionate about leveraging **data analytics, SQL, and BI tools** to solve business problems and uncover actionable insights.
+BS Entrepreneurship  
+Aspiring Data Analyst | Business Analyst  
+
+GitHub:  
+https://github.com/rohailsr1
